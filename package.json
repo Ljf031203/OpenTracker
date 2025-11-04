@@ -1,0 +1,18 @@
+{
+  "name": "opentracker",
+  "version": "0.0.1",
+  "private": true,
+  "description": "开源全链路埋点监控平台",
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean"
+  },
+  "keywords": [
+    "tracker",
+    "monitor",
+    "analytics"
+  ],
+  "author": "",
+  "license": "MIT"
+}

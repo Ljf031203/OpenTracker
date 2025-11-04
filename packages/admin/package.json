@@ -1,0 +1,16 @@
+{
+  "name": "@opentracker/admin",
+  "version": "0.0.1",
+  "description": "OpenTracker Admin - 管理后台",
+  "scripts": {
+    "dev": "echo 'Admin dev script'",
+    "build": "echo 'Admin build script'"
+  },
+  "keywords": [
+    "tracker",
+    "admin",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT"
+}
