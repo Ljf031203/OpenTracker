@@ -5,7 +5,7 @@
   "description": "OpenTracker Admin - 管理后台",
   "scripts": {
     "dev": "vite",
-    "build": "react-scripts build",
+    "build": "vite build",
     "preview": "vite preview",
     "mock": "json-server --watch mock/db.json --port 3001 --middlewares mock/auth-middleware.js"
   },
