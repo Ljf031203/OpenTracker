@@ -35,11 +35,8 @@ app.use(async (ctx, next) => {
   }
 })
 
-// 注册路由
-app.use(authRoutes.routes())
-
 // 健康检查接口
-app.use(async (ctx) => {
+app.use(async (ctx, next) => {
   if (ctx.path === '/health' || ctx.path === '/') {
     ctx.body = {
       code: 200,
@@ -49,7 +46,12 @@ app.use(async (ctx) => {
     }
     return
   }
+  await next()
 })
+
+// 注册路由
+app.use(authRoutes.routes())
+app.use(authRoutes.allowedMethods()) // 正确处理 405 等方法错误
 
 //启动服务器
 const PORT = process.env.PORT || 3000
