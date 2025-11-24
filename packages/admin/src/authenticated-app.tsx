@@ -3,38 +3,24 @@ import type { MenuProps } from 'antd'
 import {
   Avatar,
   Badge,
-  Breadcrumb,
-  Button,
-  Card,
   Dropdown,
   Input,
-  Layout,
-  Menu,
   Select,
   Space,
-  Statistic,
   Tabs,
+  DatePicker,
+  Breadcrumb,
+  Button,
+  Layout,
+  Menu,
   Typography,
   theme,
-  DatePicker,
-  Empty,
 } from 'antd'
 import {
   BellOutlined,
   CloseOutlined,
-  LaptopOutlined,
-  LineChartOutlined,
-  ManOutlined,
-  NotificationOutlined,
-  PieChartOutlined,
   SearchOutlined,
   SettingOutlined,
-  UserOutlined,
-  WarningOutlined,
-  UsergroupAddOutlined,
-  ClockCircleOutlined,
-import { Breadcrumb, Button, Layout, Menu, Typography, theme } from 'antd'
-import {
   UserOutlined,
   AppstoreOutlined,
   SolutionOutlined,
@@ -53,10 +39,6 @@ const { Header, Content, Footer, Sider } = Layout
 const { Title } = Typography
 const { RangePicker } = DatePicker
 const { TabPane } = Tabs
-const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`,
-}))
 
 type MenuItem = Required<MenuProps>['items'][number]
 
@@ -171,6 +153,15 @@ const AuthenticatedApp: React.FC = () => {
     removeToken()
     navigate('/')
   }
+
+  const onMenuClick: MenuProps['onClick'] = (e) => {
+    setCurrentKey(e.key)
+  }
+
+  const onNavClick: MenuProps['onClick'] = (e) => {
+    setCurrentNav(e.key)
+  }
+
   const handleSearchToggle = () => {
     setShowSearch(!showSearch)
     // 展开时清空搜索值
@@ -201,7 +192,7 @@ const AuthenticatedApp: React.FC = () => {
     </Menu>
   )
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header
         style={{
           display: 'flex',
@@ -292,22 +283,28 @@ const AuthenticatedApp: React.FC = () => {
           </Dropdown>
         </div>
       </Header>
-      <div style={{ padding: '0 48px' }}>
+      <div style={{ flex: 1, padding: '0 48px', display: 'flex', flexDirection: 'column' }}>
         <Breadcrumb
           style={{ margin: '16px 0' }}
           items={[{ title: 'Home' }, { title: 'List' }, { title: 'App' }]}
         />
         <Layout
-          style={{ padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG }}
+          style={{
+            flex: 1,
+            padding: '24px 0',
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+            display: 'flex',
+          }}
         >
-          <Sider style={{ background: colorBgContainer }} width={200}>
+          <Sider style={{ background: colorBgContainer, width: 200, flexShrink: 0 }}>
             <Menu
               mode="inline"
-              selectedKeys={[selectedMenuItem]}
+              onClick={onMenuClick}
+              selectedKeys={[currentKey]}
               defaultOpenKeys={['sub1']}
               style={{ height: '100%' }}
-              items={items2}
-              onClick={(e) => setSelectedMenuItem(e.key)}
+              items={subItems}
             />
           </Sider>
           <Content style={{ padding: '0 24px', maxHeight: 684, overflow: 'auto' }}></Content>
