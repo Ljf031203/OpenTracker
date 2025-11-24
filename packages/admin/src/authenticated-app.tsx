@@ -56,6 +56,10 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
       label: `subnav ${key}`,
       children: Array.from({ length: 4 }).map((_, j) => {
         const subKey = index * 4 + j + 1
+        return {
+          key: subKey,
+          label: `option${subKey}`,
+        }
       }),
     }
   }
