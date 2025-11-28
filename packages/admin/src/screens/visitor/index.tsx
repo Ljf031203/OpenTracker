@@ -1,11 +1,15 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const VisitorPage: React.FC = () => {
-  return (
-    <div className="visitor-page">
-      <h2>访客分析</h2>
-    </div>
-  )
+  const navigate = useNavigate()
+
+  // 重定向到访客趋势页面
+  React.useEffect(() => {
+    navigate('/home/visitor-Trends')
+  }, [navigate])
+
+  return null
 }
 
 export default VisitorPage

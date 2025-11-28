@@ -6,11 +6,14 @@ import HeaderComponent from '@/components/header'
 import SiderComponent from '@/components/sider'
 import DashboardPage from '@/screens/dashboard'
 import VisitorPage from '@/screens/visitor'
+import VisitorTrends from '@/screens/visitor/visitor-Trends'
 import BehaviorPage from '@/screens/behavior'
 import CustomerPage from '@/screens/customer'
 import ErrorPage from '@/screens/error'
 import PerformancePage from '@/screens/performance'
 import BlankPage from '@/screens/blank'
+import VisitorJournal from './screens/visitor/vistor-Journal'
+import VisitorDevice from './screens/visitor/visitor- Device'
 
 const { Content, Footer } = Layout
 
@@ -26,7 +29,9 @@ const AuthenticatedApp: React.FC = () => {
     // 根据菜单key导航到对应的路由
     const routeMap: Record<string, string> = {
       sub11: '/home/dashboard',
-      sub21: '/home/visitor',
+      sub21: '/home/visitor-Trends',
+      sub22: '/home/visitor-Journal',
+      sub23: '/home/visitor-Device',
       sub31: '/home/behavior',
       sub41: '/home/customer',
       sub51: '/home/error',
@@ -64,6 +69,9 @@ const AuthenticatedApp: React.FC = () => {
             <Routes>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="visitor" element={<VisitorPage />} />
+              <Route path="visitor-Trends" element={<VisitorTrends />} />
+              <Route path="visitor-Journal" element={<VisitorJournal />} />
+              <Route path="visitor-Device" element={<VisitorDevice />} />
               <Route path="behavior" element={<BehaviorPage />} />
               <Route path="customer" element={<CustomerPage />} />
               <Route path="error" element={<ErrorPage />} />

@@ -37,8 +37,9 @@ const subItems: MenuItem[] = [
     icon: <UserOutlined />,
     label: '访客分析',
     children: [
-      { key: 'sub21', label: 'option 1' },
-      { key: 'sub22', label: 'option 2' },
+      { key: 'sub21', label: '访客趋势' },
+      { key: 'sub22', label: '访客日志' },
+      { key: 'sub23', label: '访客设备' },
     ],
   },
   {

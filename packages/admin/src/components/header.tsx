@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Layout,
   Button,
@@ -19,7 +19,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { removeToken } from '@/utils/token'
+import { removeToken, getToken, parseToken } from '@/utils/token'
 
 const { Header } = Layout
 const { Title } = Typography
@@ -29,6 +29,48 @@ const HeaderComponent: React.FC = () => {
   const navigate = useNavigate()
   const [showSearch, setShowSearch] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const [username, setUsername] = useState<string>('')
+
+  // 从token中获取用户信息
+  useEffect(() => {
+    const token = getToken()
+    console.log('Token from localStorage:', token)
+    if (token) {
+      try {
+        // 尝试解析token
+        const userInfo = parseToken(token)
+        console.log('Parsed token using parseToken function:', userInfo)
+        if (userInfo && userInfo.username) {
+          console.log('Username from parseToken:', userInfo.username)
+          setUsername(userInfo.username)
+        } else {
+          // 如果解析失败，尝试直接解析JSON格式的token（兼容当前的存储方式）
+          const parsedToken = JSON.parse(token)
+          console.log('Parsed token as JSON:', parsedToken)
+          if (parsedToken && (parsedToken.username || parsedToken.login)) {
+            const finalUsername = parsedToken.username || parsedToken.login
+            console.log('Username from JSON parse:', finalUsername)
+            setUsername(finalUsername)
+          } else {
+            console.log('No username found in token, using default')
+            setUsername('管理员')
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing token:', error)
+        // 解析失败时设置默认用户名
+        setUsername('管理员')
+      }
+    } else {
+      console.log('No token found, using default username')
+      setUsername('管理员')
+    }
+  }, [])
+
+  // 监听username变化并打印
+  useEffect(() => {
+    console.log('Current username state:', username)
+  }, [username])
 
   const handleLogout = () => {
     removeToken()
@@ -36,6 +78,8 @@ const HeaderComponent: React.FC = () => {
   }
 
   const handleSearchToggle = () => {
+    // 解析 token 获取用户信息
+
     setShowSearch(!showSearch)
     // 展开时清空搜索值
     if (!showSearch) {
@@ -53,6 +97,7 @@ const HeaderComponent: React.FC = () => {
   }
 
   return (
+    // 解析 token 获取用户信息
     <Header
       style={{
         display: 'flex',
@@ -72,28 +117,6 @@ const HeaderComponent: React.FC = () => {
         >
           主页
         </Title>
-
-        {/* 主导航链接 */}
-        <Space>
-          <Button type="text">数据概览</Button>
-          {/* 事件管理下拉菜单 */}
-          <Dropdown
-            menu={{
-              items: [
-                { key: '1', label: '1' },
-                { key: '2', label: '2' },
-                { key: '3', label: '3' },
-                { key: '4', label: '4' },
-                { key: '5', label: '5' },
-              ],
-            }}
-            placement="bottomLeft"
-          >
-            <Button type="text">事件管理</Button>
-          </Dropdown>
-          <Button type="text">报表分析</Button>
-          <Button type="text">环境配置</Button>
-        </Space>
       </div>
 
       {/* 右侧：功能区 */}
@@ -151,7 +174,7 @@ const HeaderComponent: React.FC = () => {
         >
           <Space style={{ cursor: 'pointer' }}>
             <Avatar icon={<UserOutlined />} />
-            <span>管理员</span>
+            <span>{username}</span>
           </Space>
         </Dropdown>
       </div>
