@@ -34,43 +34,29 @@ const HeaderComponent: React.FC = () => {
   // 从token中获取用户信息
   useEffect(() => {
     const token = getToken()
-    console.log('Token from localStorage:', token)
     if (token) {
       try {
         // 尝试解析token
         const userInfo = parseToken(token)
-        console.log('Parsed token using parseToken function:', userInfo)
         if (userInfo && userInfo.username) {
-          console.log('Username from parseToken:', userInfo.username)
           setUsername(userInfo.username)
         } else {
           // 如果解析失败，尝试直接解析JSON格式的token（兼容当前的存储方式）
           const parsedToken = JSON.parse(token)
-          console.log('Parsed token as JSON:', parsedToken)
           if (parsedToken && (parsedToken.username || parsedToken.login)) {
-            const finalUsername = parsedToken.username || parsedToken.login
-            console.log('Username from JSON parse:', finalUsername)
-            setUsername(finalUsername)
+            setUsername(parsedToken.username || parsedToken.login)
           } else {
-            console.log('No username found in token, using default')
             setUsername('管理员')
           }
         }
       } catch (error) {
-        console.error('Error parsing token:', error)
         // 解析失败时设置默认用户名
         setUsername('管理员')
       }
     } else {
-      console.log('No token found, using default username')
       setUsername('管理员')
     }
   }, [])
-
-  // 监听username变化并打印
-  useEffect(() => {
-    console.log('Current username state:', username)
-  }, [username])
 
   const handleLogout = () => {
     removeToken()
