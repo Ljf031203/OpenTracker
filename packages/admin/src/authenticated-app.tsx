@@ -45,7 +45,7 @@ const AuthenticatedApp: React.FC = () => {
   }
   return (
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <HeaderComponent />
+      <HeaderComponent/>
       <div style={{ flex: 1, padding: '0 48px', display: 'flex', flexDirection: 'column' }}>
         <Breadcrumb
           style={{ margin: '16px 0' }}

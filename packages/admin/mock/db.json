@@ -41,6 +41,12 @@
       "username": "aa",
       "password": "aaa",
       "role": "user"
+    },
+    {
+      "id": "ef62",
+      "username": "admin1",
+      "password": "333",
+      "role": "user"
     }
   ]
 }
