@@ -18,16 +18,3 @@ export interface RegisterParams {
   password: string
   role?: 'admin' | 'user'
 }
-
-// 行为监控部分
-export interface BehaviorEvent {
-  id: string
-  userId: string
-  timestamp: string
-  type: string 
-  element: string
-  url: string
-  metadata: {
-    [key: string]: any
-  }
-}

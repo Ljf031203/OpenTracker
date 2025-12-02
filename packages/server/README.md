@@ -107,3 +107,18 @@ Authorization: Bearer <your_token>
 },
 "timestamp": "2025-11-20T00:00:00.000Z"
 }
+
+### 5.SDK统一上报接口
+
+POST /api/track/report
+请求头：
+{
+"type": "Error | performance | behavior | blank",
+"data": { ... }
+}
+
+响应示例:
+{
+"code": 200,
+"message": "上报成功"
+}

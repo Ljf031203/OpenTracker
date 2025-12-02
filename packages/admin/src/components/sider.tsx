@@ -27,10 +27,6 @@ const subItems: MenuItem[] = [
     key: 'sub1',
     icon: <AppstoreOutlined />,
     label: '报表面板',
-    children: [
-      { key: 'sub11', label: 'option 1' },
-      { key: 'sub12', label: 'option 2' },
-    ],
   },
   {
     key: 'sub2',
