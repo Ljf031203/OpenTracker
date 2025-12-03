@@ -68,19 +68,21 @@ export default class UserVitals {
     this.initClickHandler(this.clickMountList)
     // 初始化 Http 请求事件捕获
     this.initHttpHandler()
-
   }
 
   // 封装用户行为的上报入口
   userSendHandler = (data: IMetrics) => {
     // 处理数据
     const processedData = this.processorManager.process(data)
-    const reportData = {
-      type: processedData.type,
-      data: processedData
+
+    // 将数据存储到临时存储（breadcrumbs）中
+    this.breadcrumbs.add(processedData)
+
+    // 仅在非HTTP请求类型时才发送到服务器，避免无限循环
+    // 如果需要所有类型都只存储不发送，可以注释掉下面的send调用
+    if (processedData.type !== 'http') {
+      this.engineInstance.send(processedData)
     }
-    // 进行通知内核实例进行上报;
-    this.engineInstance.send(processedData)
   }
 
   // 补齐 pathname 和 timestamp 参数

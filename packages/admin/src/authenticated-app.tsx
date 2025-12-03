@@ -13,7 +13,7 @@ import ErrorPage from '@/screens/error'
 import PerformancePage from '@/screens/performance'
 import BlankPage from '@/screens/blank'
 import VisitorJournal from './screens/visitor/vistor-Journal'
-import VisitorDevice from './screens/visitor/visitor- Device'
+import VisitorDevice from './screens/visitor/visitor-Device'
 
 const { Content, Footer } = Layout
 
@@ -45,7 +45,7 @@ const AuthenticatedApp: React.FC = () => {
   }
   return (
     <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <HeaderComponent/>
+      <HeaderComponent />
       <div style={{ flex: 1, padding: '0 48px', display: 'flex', flexDirection: 'column' }}>
         <Breadcrumb
           style={{ margin: '16px 0' }}

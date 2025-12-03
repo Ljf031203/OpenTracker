@@ -252,6 +252,10 @@ export class HttpCollector extends BaseCollector {
     success: boolean
     errorMsg: string
   }): void {
+    if (data.url.includes('/api/track/report')) {
+      return
+    }
+
     const httpData: IMetrics = {
       type: 'http',
       page: window.location.pathname,

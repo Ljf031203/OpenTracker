@@ -1,6 +1,6 @@
 // src/App.tsx
 import React, { useEffect } from 'react'
-// 使用相对路径导入本地未发布的 SDK
+
 import { UserVitals } from '../../sdk/src/index'
 import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
@@ -49,19 +49,19 @@ const App = () => {
           } catch (error) {
             console.error('SDK数据上报失败:', error)
           }
-        }
+        },
       }
-      
+
       // 初始化UserVitals实例
       const userVitals = new UserVitals(engineInstance)
-      
+
       // 配置SDK
       userVitals.setMaxBehaviorRecords(200)
       userVitals.setClickMountList(['button', 'div', 'a', 'img'])
-      
+
       // 将SDK实例挂载到window上，方便调试和使用
       ;(window as any).userVitals = userVitals
-      
+
       console.log('OpenTracker SDK初始化成功')
     } catch (error) {
       console.error('OpenTracker SDK初始化失败:', error)
