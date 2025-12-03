@@ -18,6 +18,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import axios from 'axios'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -41,21 +42,40 @@ interface VisitorJournalEntry {
   }
 }
 
-// 模拟浏览器图标映射
+// 浏览器图标映射
 const browserIcons: { [key: string]: string } = {
-  Google: 'chrome',
-  Bing: 'edge',
-  DuckDuckGo: 'search',
+  Chrome: 'chrome',
+  Edge: 'edge',
   Firefox: 'firefox',
   Safari: 'safari',
+  Opera: 'opera',
+  Unknown: 'search',
 }
 
-// 模拟访问日志数据生成函数
-const generateJournalData = (): VisitorJournalEntry[] => {
-  const browsers = ['Google', 'Bing', 'DuckDuckGo', 'Firefox', 'Safari']
-  const types = ['page', 'click', 'scroll', 'diving']
-  const locations = ['Red Sea', 'Bali', 'Great Barrier Reef', 'Maldives', 'Galapagos']
-  const behaviors = [
+// 获取行为日志数据的API调用
+const fetchJournalData = async (dateRange?: [dayjs.Dayjs, dayjs.Dayjs], type?: string) => {
+  try {
+    // 由于后端还没有提供获取行为日志的API，我们暂时返回空数据
+    // 当后端API可用时，替换为实际的API调用
+    // const params = {
+    //   startDate: dateRange ? dateRange[0].format('YYYY-MM-DD HH:mm:ss') : undefined,
+    //   endDate: dateRange ? dateRange[1].format('YYYY-MM-DD HH:mm:ss') : undefined,
+    //   type: type === 'all' ? undefined : type
+    // }
+    // const response = await axios.get('/api/track/behavior-logs', { params })
+    // return response.data
+    
+    // 临时返回空数据
+    return []
+  } catch (error) {
+    console.error('获取访问日志失败:', error)
+    return []
+  }
+}
+
+// 将行为日志转换为访问日志格式
+const transformBehaviorLogsToJournal = (logs: any[]): VisitorJournalEntry[] => {
+  const behaviorConfig = [
     { type: 'page', text: '浏览页面', icon: <EyeOutlined /> },
     { type: 'click', text: '点击链接', icon: <EyeOutlined /> },
     { type: 'scroll', text: '页面滚动', icon: <ClockCircleOutlined /> },
@@ -63,65 +83,25 @@ const generateJournalData = (): VisitorJournalEntry[] => {
     { type: 'shopping', text: '查看购物车', icon: <ShoppingCartOutlined /> },
   ]
 
-  const data: VisitorJournalEntry[] = []
-  const today = dayjs()
-
-  // 生成过去7天的模拟数据
-  for (let i = 0; i < 30; i++) {
-    // 每天生成3-8条记录
-    const recordsPerDay = Math.floor(Math.random() * 6) + 3
-
-    for (let j = 0; j < recordsPerDay; j++) {
-      const timestamp = today
-        .subtract(i, 'day')
-        .subtract(Math.floor(Math.random() * 24), 'hour')
-        .subtract(Math.floor(Math.random() * 60), 'minute')
-        .subtract(Math.floor(Math.random() * 60), 'second')
-
-      const selectedType = types[Math.floor(Math.random() * types.length)]
-      const selectedBehavior = behaviors.find((b) => b.type === selectedType) || behaviors[0]
-      const browser = browsers[Math.floor(Math.random() * browsers.length)]
-
-      let metadata: { [key: string]: any } = {}
-
-      // 根据类型添加不同的元数据
-      if (selectedType === 'diving') {
-        metadata = {
-          'diving-rating': (Math.random() * 3 + 2).toFixed(1),
-        }
-      } else if (selectedType === 'shopping') {
-        metadata = {
-          'product-count': Math.floor(Math.random() * 5) + 1,
-          price: `$${(Math.random() * 1000).toFixed(2)}`,
-        }
-      }
-
-      data.push({
-        id: `${i}-${j}`,
-        timestamp: timestamp.format('YYYY-MM-DD HH:mm:ss'),
-        userType: Math.random() > 0.3 ? 'guest' : 'registered',
-        type: selectedType,
-        location:
-          selectedType === 'diving'
-            ? locations[Math.floor(Math.random() * locations.length)]
-            : locations[0],
-        browser: {
-          name: browser,
-          icon: browserIcons[browser] || 'chrome',
-        },
-        device: Math.random() > 0.5 ? 'desktop' : 'mobile',
-        behavior: selectedBehavior.text,
-        url:
-          selectedType === 'shopping'
-            ? 'dive-shop.pacific/diving-knife/'
-            : `divezone.me/${selectedType}${selectedType === 'diving' ? locations[Math.floor(Math.random() * locations.length)].toLowerCase().replace(' ', '-') : ''}`,
-        metadata,
-      })
+  return logs.map((log, index) => {
+    const behavior = behaviorConfig.find(b => b.type === log.type) || behaviorConfig[0]
+    
+    return {
+      id: index.toString(),
+      timestamp: dayjs(log.time).format('YYYY-MM-DD HH:mm:ss'),
+      userType: log.userType || 'guest',
+      type: log.type || 'page',
+      location: log.location || 'Unknown',
+      browser: {
+        name: log.browser?.name || 'Unknown',
+        icon: browserIcons[log.browser?.name || 'Unknown'] || 'chrome',
+      },
+      device: log.device?.type || 'Unknown',
+      behavior: behavior.text,
+      url: log.url || log.page || '',
+      metadata: log.metadata || {},
     }
-  }
-
-  // 按时间戳倒序排序
-  return data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+  }).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }
 
 // 访问日志项组件
@@ -210,13 +190,13 @@ const VisitorJournal: React.FC = () => {
     const fetchData = async (): Promise<void> => {
       setLoading(true)
       try {
-        // 模拟API请求延迟
-        await new Promise<void>((resolve) => setTimeout(resolve, 500))
+        // 获取行为日志数据
+        const behaviorLogs = await fetchJournalData(dateRange, filterType)
+        
+        // 转换为访问日志格式
+        const journalEntries = transformBehaviorLogsToJournal(behaviorLogs)
 
-        // 生成模拟数据
-        const data = generateJournalData()
-
-        setJournalData(data)
+        setJournalData(journalEntries)
       } catch (error: any) {
         console.error('获取访问日志失败:', error)
       } finally {
@@ -225,7 +205,7 @@ const VisitorJournal: React.FC = () => {
     }
 
     fetchData()
-  }, [])
+  }, [dateRange, filterType])
 
   // 过滤数据
   const filteredData = journalData.filter((entry) => {

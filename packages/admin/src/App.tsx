@@ -1,10 +1,14 @@
 // src/App.tsx
-import React from 'react'
+import React, { useEffect } from 'react'
+// 使用相对路径导入本地未发布的 SDK
+import { UserVitals } from '../../../sdk/src/index'
+import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { getToken } from '@/utils/token'
 import UnauthenticatedApp from './unauthenticated-app' // 非认证页面（登录/注册）
 import AuthenticatedApp from './authenticated-app' // 认证后页面（主页）
 import UserProfilePage from '@/screens/user' // 个人资料页面
+import user from '@/screens/user'
 
 // 路由守卫组件
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -34,6 +38,37 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 }
 
 const App = () => {
+  // 初始化SDK
+  useEffect(() => {
+    try {
+      // 配置数据上报引擎
+      const engineInstance = {
+        send: async (data: any) => {
+          try {
+            // 将数据发送到后端
+            await axios.post('/api/track/report', data)
+          } catch (error) {
+            console.error('SDK数据上报失败:', error)
+          }
+        }
+      }
+      
+      // 初始化UserVitals实例
+      const userVitals = new UserVitals(engineInstance)
+      
+      // 配置SDK
+      userVitals.setMaxBehaviorRecords(200)
+      userVitals.setClickMountList(['button', 'div', 'a', 'img'])
+      
+      // 将SDK实例挂载到window上，方便调试和使用
+      ;(window as any).userVitals = userVitals
+      
+      console.log('OpenTracker SDK初始化成功')
+    } catch (error) {
+      console.error('OpenTracker SDK初始化失败:', error)
+    }
+  }, [])
+
   return (
     <Router>
       <div style={{ maxWidth: '100%' }}>

@@ -8,6 +8,7 @@ import {
   TagOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons'
+import axios from 'axios'
 
 const { Search } = Input
 
@@ -27,41 +28,86 @@ interface DeviceModel {
   brand?: string
 }
 
-// 模拟设备类型数据生成函数
-const generateDeviceTypeData = (): DeviceType[] => {
-  return [
-    { id: '1', name: '桌面', count: 5408, icon: <LaptopOutlined /> },
-    { id: '2', name: '智能手机', count: 3494, icon: <MobileOutlined /> },
-    { id: '3', name: '平板电脑', count: 631, icon: <TabletOutlined /> },
-    { id: '4', name: '平板手机', count: 145, icon: <MobileOutlined /> },
-    { id: '5', name: '未知', count: 5, icon: <UnorderedListOutlined /> },
-    { id: '6', name: '功能手机', count: 1, icon: <MobileOutlined /> },
-    { id: '7', name: 'TV', count: 0, icon: <TagOutlined /> },
-    { id: '8', name: '便携媒体播放器', count: 0, icon: <UnorderedListOutlined /> },
-    { id: '9', name: '外围设备', count: 0, icon: <UnorderedListOutlined /> },
-    { id: '10', name: '控制台', count: 0, icon: <UnorderedListOutlined /> },
-  ]
+// 根据设备类型获取图标
+const getDeviceIcon = (type: string) => {
+  switch (type.toLowerCase()) {
+    case 'desktop':
+    case '桌面':
+      return <LaptopOutlined />;
+    case 'mobile':
+    case 'smartphone':
+    case '智能手机':
+      return <MobileOutlined />;
+    case 'tablet':
+    case '平板电脑':
+      return <TabletOutlined />;
+    default:
+      return <UnorderedListOutlined />;
+  }
 }
 
-// 模拟设备型号数据生成函数
-const generateDeviceModelData = (): DeviceModel[] => {
-  return [
-    { id: '1', name: 'iPhone', count: 2040, brand: 'Apple' },
-    { id: '2', name: '通用型号', count: 1703, brand: 'Apple' },
-    { id: '3', name: 'iPad', count: 507, brand: 'Apple' },
-    { id: '4', name: 'Galaxy S8', count: 130, brand: 'Samsung' },
-    { id: '5', name: 'Galaxy S7', count: 128, brand: 'Samsung' },
-    { id: '6', name: '通用智能手机', count: 93, brand: 'Unknown' },
-    { id: '7', name: 'Galaxy S7 Edge', count: 90, brand: 'Samsung' },
-    { id: '8', name: 'Galaxy S9', count: 54, brand: 'Samsung' },
-    { id: '9', name: 'Galaxy Note 8', count: 47, brand: 'Samsung' },
-    { id: '10', name: 'Galaxy S6', count: 42, brand: 'Samsung' },
-    { id: '11', name: 'Galaxy S6 Edge', count: 38, brand: 'Samsung' },
-    { id: '12', name: 'Galaxy Note 5', count: 35, brand: 'Samsung' },
-    { id: '13', name: 'Galaxy A5', count: 30, brand: 'Samsung' },
-    { id: '14', name: 'Galaxy A7', count: 28, brand: 'Samsung' },
-    { id: '15', name: 'Galaxy J7', count: 25, brand: 'Samsung' },
-  ]
+// 获取行为日志数据的API调用
+const fetchBehaviorLogs = async () => {
+  try {
+    // 由于后端还没有提供获取行为日志的API，我们暂时返回空数据
+    // 当后端API可用时，替换为实际的API调用
+    // const response = await axios.get('/api/track/behavior-logs')
+    // return response.data
+    
+    // 临时返回空数据
+    return []
+  } catch (error) {
+    console.error('获取行为日志失败:', error)
+    return []
+  }
+}
+
+// 从行为日志中计算设备统计数据
+const calculateDeviceStats = (logs: any[]) => {
+  const deviceTypeCounts: { [key: string]: number } = {}
+  const deviceModelCounts: { [key: string]: { count: number, brand: string } } = {}
+
+  // 统计设备类型和型号
+  logs.forEach(log => {
+    if (log.device) {
+      const { type, model, brand } = log.device
+      
+      // 统计设备类型
+      if (type) {
+        deviceTypeCounts[type] = (deviceTypeCounts[type] || 0) + 1
+      }
+      
+      // 统计设备型号
+      if (model) {
+        if (!deviceModelCounts[model]) {
+          deviceModelCounts[model] = { count: 0, brand: brand || 'Unknown' }
+        }
+        deviceModelCounts[model].count++
+      }
+    }
+  })
+
+  // 转换为设备类型数据
+  const deviceTypes = Object.entries(deviceTypeCounts)
+    .map(([name, count], index) => ({
+      id: (index + 1).toString(),
+      name,
+      count,
+      icon: getDeviceIcon(name)
+    }))
+    .sort((a, b) => b.count - a.count)
+
+  // 转换为设备型号数据
+  const deviceModels = Object.entries(deviceModelCounts)
+    .map(([name, data], index) => ({
+      id: (index + 1).toString(),
+      name,
+      count: data.count,
+      brand: data.brand
+    }))
+    .sort((a, b) => b.count - a.count)
+
+  return { deviceTypes, deviceModels }
 }
 
 const VisitorDevice: React.FC = () => {
@@ -79,15 +125,14 @@ const VisitorDevice: React.FC = () => {
     const fetchData = async (): Promise<void> => {
       setLoading(true)
       try {
-        // 模拟API请求延迟
-        await new Promise<void>((resolve) => setTimeout(resolve, 500))
+        // 获取行为日志数据
+        const behaviorLogs = await fetchBehaviorLogs()
+        
+        // 计算设备统计数据
+        const { deviceTypes, deviceModels } = calculateDeviceStats(behaviorLogs)
 
-        // 生成模拟数据
-        const typeData = generateDeviceTypeData()
-        const modelData = generateDeviceModelData()
-
-        setDeviceTypeData(typeData)
-        setDeviceModelData(modelData)
+        setDeviceTypeData(deviceTypes)
+        setDeviceModelData(deviceModels)
       } catch (error: any) {
         console.error('获取设备数据失败:', error)
       } finally {

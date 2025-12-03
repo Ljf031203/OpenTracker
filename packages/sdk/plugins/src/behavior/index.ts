@@ -53,7 +53,6 @@ export default class UserVitals {
     this.processorManager = new ProcessorManager()
     // 初始化 用户自定义 事件捕获
     this.customHandler = this.initCustomerHandler()
-    // 作为 真实sdk 的时候，需要在初始化时传入与默认值合并;
     this.clickMountList = ['button'].map((x) => x.toLowerCase())
     // 重写事件
     wrHistory()
@@ -69,13 +68,17 @@ export default class UserVitals {
     this.initClickHandler(this.clickMountList)
     // 初始化 Http 请求事件捕获
     this.initHttpHandler()
-    // 上报策略在后几篇细说
+
   }
 
   // 封装用户行为的上报入口
   userSendHandler = (data: IMetrics) => {
     // 处理数据
     const processedData = this.processorManager.process(data)
+    const reportData = {
+      type: processedData.type,
+      data: processedData
+    }
     // 进行通知内核实例进行上报;
     this.engineInstance.send(processedData)
   }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Card, Row, Col, Statistic, Tooltip, Spin, DatePicker, Select, ConfigProvider } from 'antd'
 import { ArrowUpOutlined, ArrowDownOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import axios from 'axios'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -67,51 +68,62 @@ interface StatCardProps {
   color?: string
 }
 
-// 模拟访客趋势数据生成函数
-const generateVisitorData = (): VisitorDataPoint[] => {
-  const data: VisitorDataPoint[] = []
-  const today = dayjs()
-  // 生成过去30天的数据
-  for (let i = 29; i >= 0; i--) {
-    const date = today.subtract(i, 'day')
-    const baseValue = 10000 + Math.random() * 5000
-    // 添加一些随机波动，但保持整体趋势
-    const trendFactor = Math.sin(i / 5) * 1000 // 创建周期性波动
-    const randomFactor = Math.random() * 2000 - 1000 // 添加随机噪声
-
-    data.push({
-      date: date.format('YYYY-MM-DD'),
-      visitors: Math.round(baseValue + trendFactor + randomFactor),
-
-      pageViews: Math.round((baseValue + trendFactor + randomFactor) * (2 + Math.random() * 3)),
+// 从后端API获取访客趋势数据
+const fetchVisitorTrends = async (startDate: string, endDate: string): Promise<VisitorDataPoint[]> => {
+  try {
+    const response = await axios.get('/api/track/visitor/trends', {
+      params: {
+        startDate,
+        endDate
+      }
     })
-  }
-  return data
-}
-
-// 模拟访客概览数据
-const generateOverviewData = (): OverviewData => {
-  return {
-    totalVisits: 109716,
-    uniqueVisitors: 97678,
-    averageDuration: 269, // 秒
-    bounceRate: 57.9,
-    pagesPerSession: 3.6,
-    newVisitors: 220,
-    returningVisitors: 76,
-    maxActivity: 81,
-    totalPageViews: 27180,
-    uniquePageViews: 21119,
-    totalSessions: 1644,
-    uniqueSessions: 1543,
+    return response.data.data || []
+  } catch (error) {
+    console.error('获取访客趋势数据失败:', error)
+    return []
   }
 }
 
-// 计算环比增长率
-const calculateGrowthRate = (current: number, previous: number): number => {
-  if (previous === 0) return 0
-  const rate = ((current - previous) / previous) * 100
-  return Math.round(rate * 10) / 10 // 保留一位小数
+// 从后端API获取访客概览数据
+const fetchVisitorOverview = async (startDate: string, endDate: string): Promise<OverviewData> => {
+  try {
+    const response = await axios.get('/api/track/visitor/overview', {
+      params: {
+        startDate,
+        endDate
+      }
+    })
+    return response.data.data || {
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      averageDuration: 0,
+      bounceRate: 0,
+      pagesPerSession: 0,
+      newVisitors: 0,
+      returningVisitors: 0,
+      maxActivity: 0,
+      totalPageViews: 0,
+      uniquePageViews: 0,
+      totalSessions: 0,
+      uniqueSessions: 0,
+    }
+  } catch (error) {
+    console.error('获取访客概览数据失败:', error)
+    return {
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      averageDuration: 0,
+      bounceRate: 0,
+      pagesPerSession: 0,
+      newVisitors: 0,
+      returningVisitors: 0,
+      maxActivity: 0,
+      totalPageViews: 0,
+      uniquePageViews: 0,
+      totalSessions: 0,
+      uniqueSessions: 0,
+    }
+  }
 }
 
 // 自定义线图组件（使用SVG实现）
@@ -374,15 +386,18 @@ const VisitorTrends: React.FC = () => {
     const fetchData = async (): Promise<void> => {
       setLoading(true)
       try {
-        // 模拟API请求延迟
-        await new Promise<void>((resolve) => setTimeout(resolve, 500))
+        // 获取日期范围
+        const startDate = dateRange[0].format('YYYY-MM-DD')
+        const endDate = dateRange[1].format('YYYY-MM-DD')
 
-        // 生成模拟数据
-        const trendData = generateVisitorData()
-        const overview = generateOverviewData()
+        // 调用真实API获取数据
+        const [trendData, overview] = await Promise.all([
+          fetchVisitorTrends(startDate, endDate),
+          fetchVisitorOverview(startDate, endDate)
+        ])
 
         setVisitorData(trendData)
-        setOverviewData((prev) => ({ ...prev, ...overview }))
+        setOverviewData(overview)
       } catch (error: any) {
         console.error('获取访客数据失败:', error)
         // 保持当前数据不变，不重置为默认值
@@ -394,17 +409,24 @@ const VisitorTrends: React.FC = () => {
     fetchData()
   }, [dateRange, viewType])
 
-  // 计算增长率（基于模拟的环比数据）
+  // 简单的增长率计算（基于当前数据的前一天比较）
+  const calculateGrowthRate = (current: number, previous: number): number => {
+    if (previous === 0) return 0
+    const rate = ((current - previous) / previous) * 100
+    return Math.round(rate * 10) / 10 // 保留一位小数
+  }
+
+  // 计算增长率（示例：基于当前数据的简单计算）
   const growthRates: GrowthRates = {
-    totalVisits: 23.1,
-    uniqueVisitors: 18.4,
-    averageDuration: 4.9,
-    bounceRate: 1.8,
-    pagesPerSession: 3.7,
-    newVisitors: 20.2,
-    returningVisitors: -7.5,
-    totalPageViews: 18.4,
-    uniquePageViews: 16.4,
+    totalVisits: 0,
+    uniqueVisitors: 0,
+    averageDuration: 0,
+    bounceRate: 0,
+    pagesPerSession: 0,
+    newVisitors: 0,
+    returningVisitors: 0,
+    totalPageViews: 0,
+    uniquePageViews: 0,
   }
 
   return (
