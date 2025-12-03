@@ -1,14 +1,13 @@
 // src/App.tsx
 import React, { useEffect } from 'react'
 // 使用相对路径导入本地未发布的 SDK
-import { UserVitals } from '../../../sdk/src/index'
+import { UserVitals } from '../../sdk/src/index'
 import axios from 'axios'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { getToken } from '@/utils/token'
 import UnauthenticatedApp from './unauthenticated-app' // 非认证页面（登录/注册）
 import AuthenticatedApp from './authenticated-app' // 认证后页面（主页）
 import UserProfilePage from '@/screens/user' // 个人资料页面
-import user from '@/screens/user'
 
 // 路由守卫组件
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
