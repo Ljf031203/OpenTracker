@@ -28,6 +28,13 @@ class TrackService {
         console.warn('未知上报类型：', type)
     }
   }
+
+  //批量处理
+  handleBatch(reports: { type: string; data: any }[]) {
+    for (const item of reports) {
+      this.handleReport(item.type, item.data)
+    }
+  }
 }
 
 export default new TrackService()

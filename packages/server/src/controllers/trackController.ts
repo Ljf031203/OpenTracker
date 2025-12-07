@@ -9,6 +9,18 @@ interface ReportBody {
 class TrackController {
   // 统一上报接口
   async report(ctx: Context) {
+    const body = ctx.request.body
+
+    if (Array.isArray(body)) {
+      trackService.handleBatch(body)
+      ctx.body = {
+        code: 200,
+        message: '批量上报成功',
+        count: body.length,
+      }
+      return
+    }
+
     const { type, data } = ctx.request.body as ReportBody
 
     if (!type || !data) {

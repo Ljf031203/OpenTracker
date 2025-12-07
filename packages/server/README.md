@@ -111,9 +111,10 @@ Authorization: Bearer <your_token>
 ### 5.SDK统一上报接口
 
 POST /api/track/report
+单条上报：
 请求头：
 {
-"type": "Error | performance | behavior | blank",
+"type": "error | performance | behavior | blank",
 "data": { ... }
 }
 
@@ -121,4 +122,22 @@ POST /api/track/report
 {
 "code": 200,
 "message": "上报成功"
+}
+
+批量上报：
+[
+{
+"type": "error",
+"data": { ... }
+},
+{
+"type": "behavior",
+"data": { ... }
+}
+]
+响应示例：
+{
+"code": 200,
+"message": '批量上报成功',
+"count": 2,
 }
