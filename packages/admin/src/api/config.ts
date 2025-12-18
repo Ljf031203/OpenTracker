@@ -12,7 +12,7 @@ export const API_ENDPOINTS = {
 export interface ApiResponse<T = any> {
   code: number
   message: string
-  data: T
+  data: any
 }
 
 // 用户相关接口响应

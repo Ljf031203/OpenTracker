@@ -27,18 +27,15 @@ const subItems: MenuItem[] = [
     key: 'sub1',
     icon: <AppstoreOutlined />,
     label: '报表面板',
-    children: [
-      { key: 'sub11', label: 'option 1' },
-      { key: 'sub12', label: 'option 2' },
-    ],
+    children: [{ key: 'sub11', label: '数据概览' }],
   },
   {
     key: 'sub2',
     icon: <UserOutlined />,
     label: '访客分析',
     children: [
-      { key: 'sub21', label: 'option 1' },
-      { key: 'sub22', label: 'option 2' },
+      { key: 'sub21', label: '访客趋势' },
+      { key: 'sub22', label: '设备分析' },
     ],
   },
   {
@@ -46,8 +43,8 @@ const subItems: MenuItem[] = [
     icon: <SolutionOutlined />,
     label: '行为分析',
     children: [
-      { key: 'sub31', label: 'option 1' },
-      { key: 'sub32', label: 'option 2' },
+      { key: 'sub31', label: '事件分析' },
+      { key: 'sub32', label: '页面访问' },
     ],
   },
   {
@@ -55,8 +52,8 @@ const subItems: MenuItem[] = [
     icon: <ContactsOutlined />,
     label: '获客分析',
     children: [
-      { key: 'sub41', label: 'option 1' },
-      { key: 'sub42', label: 'option 2' },
+      { key: 'sub41', label: '用户增长' },
+      { key: 'sub42', label: '来源分析' },
     ],
   },
   {
@@ -72,10 +69,7 @@ const subItems: MenuItem[] = [
     key: 'sub6',
     icon: <LineChartOutlined />,
     label: '性能分析',
-    children: [
-      { key: 'sub61', label: 'option 1' },
-      { key: 'sub62', label: 'option 2' },
-    ],
+    children: [{ key: 'sub61', label: '性能概览' }],
   },
   {
     key: 'sub7',

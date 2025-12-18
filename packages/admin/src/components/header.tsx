@@ -75,7 +75,6 @@ const HeaderComponent: React.FC = () => {
 
         {/* 主导航链接 */}
         <Space>
-          <Button type="text">数据概览</Button>
           {/* 事件管理下拉菜单 */}
           <Dropdown
             menu={{
@@ -88,11 +87,7 @@ const HeaderComponent: React.FC = () => {
               ],
             }}
             placement="bottomLeft"
-          >
-            <Button type="text">事件管理</Button>
-          </Dropdown>
-          <Button type="text">报表分析</Button>
-          <Button type="text">环境配置</Button>
+          ></Dropdown>
         </Space>
       </div>
 

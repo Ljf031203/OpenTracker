@@ -1,11 +1,14 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const BehaviorPage: React.FC = () => {
-  return (
-    <div className="behavior-page">
-      <h2>行为分析</h2>
-    </div>
-  )
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    navigate('/home/behavior/event')
+  }, [navigate])
+
+  return null
 }
 
 export default BehaviorPage

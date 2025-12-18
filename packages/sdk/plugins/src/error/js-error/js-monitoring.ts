@@ -1,4 +1,4 @@
-import { JsErrorReporter } from './error-reporter.js'
+import { JsErrorReporter } from './js-reporter.js'
 
 export const initJsErrorMonitoring = (serverUrl?: string) => {
   const reporter = serverUrl ? new JsErrorReporter(serverUrl) : null

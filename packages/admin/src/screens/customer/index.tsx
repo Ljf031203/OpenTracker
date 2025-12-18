@@ -1,11 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CustomerPage: React.FC = () => {
-  return (
-    <div className="customer-page">
-      <h2>获客分析</h2>
-    </div>
-  )
-}
+  const navigate = useNavigate()
 
-export default CustomerPage
+  React.useEffect(() => {
+    navigate('/home/customer/growth')
+  }, [navigate])
+
+  return null
+}

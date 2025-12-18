@@ -1,11 +1,14 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const VisitorPage: React.FC = () => {
-  return (
-    <div className="visitor-page">
-      <h2>访客分析</h2>
-    </div>
-  )
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    navigate('/home/visitor/trends')
+  }, [navigate])
+
+  return null
 }
 
 export default VisitorPage

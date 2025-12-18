@@ -6,12 +6,18 @@ import HeaderComponent from '@/components/header'
 import SiderComponent from '@/components/sider'
 import DashboardPage from '@/screens/dashboard'
 import VisitorPage from '@/screens/visitor'
+import VisitorTrends from '@/screens/visitor/visitor-Trends'
 import BehaviorPage from '@/screens/behavior'
-import CustomerPage from '@/screens/customer'
+import BehaviorVisitedPages from '@/screens/behavior/behavior-visited pages'
+
+import CustomerGrowth from '@/screens/customer/customer-growth'
+import CustomerSource from '@/screens/customer/customer-source'
 import ErrorPage from '@/screens/error/error-overview'
 import ErrorLogsPage from '@/screens/error/error-logs'
 import PerformancePage from '@/screens/performance'
 import BlankPage from '@/screens/blank'
+import VisitorDevice from './screens/visitor/visitor-Device'
+import BehaviorEvent from './screens/behavior/behavior-event'
 
 const { Content, Footer } = Layout
 
@@ -27,9 +33,12 @@ const AuthenticatedApp: React.FC = () => {
     // 根据菜单key导航到对应的路由
     const routeMap: Record<string, string> = {
       sub11: '/home/dashboard',
-      sub21: '/home/visitor',
-      sub31: '/home/behavior',
-      sub41: '/home/customer',
+      sub21: '/home/visitor/trends',
+      sub22: '/home/visitor/device',
+      sub31: '/home/behavior/event',
+      sub32: '/home/behavior/page',
+      sub41: '/home/customer/channel',
+      sub42: '/home/customer/source',
       sub51: '/home/error',
       sub52: '/home/error/logs',
       sub61: '/home/performance',
@@ -66,8 +75,13 @@ const AuthenticatedApp: React.FC = () => {
             <Routes>
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="visitor" element={<VisitorPage />} />
+              <Route path="visitor/trends" element={<VisitorTrends />} />
+              <Route path="visitor/device" element={<VisitorDevice />} />
               <Route path="behavior" element={<BehaviorPage />} />
-              <Route path="customer" element={<CustomerPage />} />
+              <Route path="behavior/page" element={<BehaviorVisitedPages />} />
+              <Route path="behavior/event" element={<BehaviorEvent />} />
+              <Route path="customer/channel" element={<CustomerGrowth />} />
+              <Route path="customer/source" element={<CustomerSource />} />
               <Route path="error" element={<ErrorPage />} />
               <Route path="error/logs" element={<ErrorLogsPage />} />
               <Route path="performance" element={<PerformancePage />} />
