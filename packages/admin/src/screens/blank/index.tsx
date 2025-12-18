@@ -1,11 +1,3 @@
-import React from 'react'
+import BlankOverview from './blank-overview'
 
-const BlankPage: React.FC = () => {
-  return (
-    <div className="blank-page">
-      <h2>白屏监控</h2>
-    </div>
-  )
-}
-
-export default BlankPage
+export default BlankOverview
