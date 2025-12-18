@@ -26,6 +26,9 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6"
   },
+  "optionalDependencies": {
+    "echarts": "^5.6.0"
+  },
   "devDependencies": {
     "@types/antd": "^1.0.4",
     "@types/react": "^19.2.5",

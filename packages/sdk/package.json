@@ -14,5 +14,8 @@
     "analytics"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "web-vitals": "^5.1.0"
+  }
 }

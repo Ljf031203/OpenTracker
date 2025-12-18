@@ -73,8 +73,7 @@ const subItems: MenuItem[] = [
     icon: <LineChartOutlined />,
     label: '性能分析',
     children: [
-      { key: 'sub61', label: 'option 1' },
-      { key: 'sub62', label: 'option 2' },
+      { key: 'sub61', label: '性能分析总览' },
     ],
   },
   {
