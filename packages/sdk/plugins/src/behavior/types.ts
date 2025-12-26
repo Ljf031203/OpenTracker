@@ -8,6 +8,28 @@ export interface IMetrics {
   [key: string]: any
 }
 
+// 插件接口
+export interface Plugin {
+  name: string
+  version: string
+  description?: string
+  author?: string
+  dependencies?: string[]
+  init: (context: PluginContext) => void
+  start?: () => void
+  stop?: () => void
+  [key: string]: any
+}
+
+// 插件上下文接口
+export interface PluginContext {
+  engineInstance: EngineInstance
+  metrics: UserMetricsStore
+  breadcrumbs: BehaviorStore
+  sendHandler: (data: IMetrics) => void
+  [key: string]: any
+}
+
 // 页面信息接口
 export interface PageInfo {
   pathname: string
